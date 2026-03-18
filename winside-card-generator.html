@@ -18,13 +18,18 @@
     border-radius: 8px; color: #fff; font-size: 14px; outline: none;
   }
   .controls textarea { resize: vertical; min-height: 60px; }
-  .upload-area {
-    border: 2px dashed #333; border-radius: 8px; padding: 20px;
-    text-align: center; cursor: pointer; transition: border-color 0.2s;
-  }
+  .search-row { display: flex; gap: 8px; }
+  .search-row input { flex: 1; }
+  .btn-search { padding: 10px 16px; background: #2D8B55; border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .btn-search:hover { background: #249148; }
+  .img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+  .img-thumb { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+  .img-thumb:hover, .img-thumb.selected { border-color: #2D8B55; }
+  .img-status { font-size: 12px; color: #666; margin-top: 6px; min-height: 18px; }
+  .upload-area { border: 2px dashed #333; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
   .upload-area:hover { border-color: #2D8B55; }
   .upload-area input { display: none; }
-  .upload-area p { font-size: 13px; color: #888; margin-top: 6px; }
+  .upload-area p { font-size: 12px; color: #888; margin-top: 4px; }
   .btn { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; transition: opacity 0.2s; width: 100%; margin-top: 4px; }
   .btn:hover { opacity: 0.85; }
   .btn-green { background: #2D8B55; color: #fff; }
@@ -32,55 +37,26 @@
   .preview-wrap { position: sticky; top: 20px; }
   .preview-label { font-size: 13px; color: #888; margin-bottom: 12px; }
   .auto-badge { background: #2D8B55; color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+  .source-tag { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-right: 4px; font-weight: 600; }
+  .source-pexels { background: #05a081; color: #fff; }
+  .source-unsplash { background: #111; color: #fff; border: 1px solid #444; }
 
   /* CARD */
-  #card {
-    width: 540px;
-    height: 675px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 4px;
-    background: #000;
-    font-family: Arial, sans-serif;
-  }
-  #card-bg {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: center;
-    background-repeat: no-repeat;
-  }
-  #card-gradient {
-    position: absolute; inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.15) 0%,
-      rgba(0,0,0,0.1) 35%,
-      rgba(0,0,0,0.5) 55%,
-      rgba(0,0,0,0.92) 75%,
-      rgba(0,0,0,0.98) 100%
-    );
-  }
-  #card-content {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    justify-content: space-between;
-    padding: 20px 28px 28px;
-  }
-  #card-brand {
-    font-size: 11px; font-weight: 600; letter-spacing: 4px;
-    text-transform: uppercase; color: rgba(255,255,255,0.75); text-align: center;
-  }
+  #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; font-family: Arial, sans-serif; }
+  #card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
+  #card-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.92) 75%, rgba(0,0,0,0.98) 100%); }
+  #card-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 28px 28px; }
+  #card-brand { font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.75); text-align: center; }
   #card-bottom { text-align: center; }
-  #card-headline {
-    font-size: 38px; font-weight: 900; color: #fff;
-    line-height: 1.15; margin-bottom: 10px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-  }
+  #card-headline { font-size: 38px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 10px; text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
   #card-subtitle { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.75); line-height: 1.4; }
 
-  .theme-green #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(0,20,10,0.5) 55%, rgba(0,40,20,0.92) 75%, rgba(0,50,25,0.98) 100%); }
-  .theme-gold #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(30,20,0,0.5) 55%, rgba(80,50,0,0.92) 75%, rgba(100,65,0,0.98) 100%); }
-  .theme-red #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(30,0,0,0.5) 55%, rgba(80,0,0,0.92) 75%, rgba(100,0,0,0.98) 100%); }
-  .theme-blue #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(0,10,40,0.5) 55%, rgba(0,20,80,0.92) 75%, rgba(0,25,100,0.98) 100%); }
+  /* Themes */
+  .theme-dark #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.92) 75%, rgba(0,0,0,0.98) 100%); }
+  .theme-green #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(0,20,10,0.5) 55%, rgba(0,40,20,0.92) 75%, rgba(0,50,25,0.98) 100%); }
+  .theme-gold #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(30,20,0,0.5) 55%, rgba(80,50,0,0.92) 75%, rgba(100,65,0,0.98) 100%); }
+  .theme-red #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(30,0,0,0.5) 55%, rgba(80,0,0,0.92) 75%, rgba(100,0,0,0.98) 100%); }
+  .theme-blue #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(0,10,40,0.5) 55%, rgba(0,20,80,0.92) 75%, rgba(0,25,100,0.98) 100%); }
 </style>
 </head>
 <body>
@@ -88,18 +64,22 @@
   <h1>Winside View — Card Generator <span id="auto-label"></span></h1>
 
   <div class="controls">
+
     <div>
       <label>Brand Name</label>
       <input type="text" id="brand" value="WINSIDE VIEW" oninput="update()">
     </div>
+
     <div>
       <label>Headline</label>
-      <textarea id="headline" oninput="update()">Kalshi Is Suing America</textarea>
+      <textarea id="headline" placeholder="Your headline here..." oninput="update()"></textarea>
     </div>
+
     <div>
       <label>Subtitle</label>
-      <textarea id="subtitle" oninput="update()">One State at a Time. 13 Lawsuits Filed.</textarea>
+      <textarea id="subtitle" placeholder="Your subtitle here..." oninput="update()"></textarea>
     </div>
+
     <div>
       <label>Gradient Theme</label>
       <select id="theme" onchange="updateTheme()">
@@ -110,16 +90,28 @@
         <option value="blue">Blue (Regulatory)</option>
       </select>
     </div>
+
     <div>
-      <label>Background Image <span id="img-source-label" style="color:#2D8B55;font-size:11px;"></span></label>
+      <label>Search HD Images (Pexels + Unsplash)</label>
+      <div class="search-row">
+        <input type="text" id="imgSearch" placeholder="e.g. courthouse, trading floor, basketball" onkeydown="if(event.key==='Enter')searchImages()">
+        <button class="btn-search" onclick="searchImages()">Search</button>
+      </div>
+      <div id="img-status" class="img-status"></div>
+      <div id="img-grid" class="img-grid"></div>
+    </div>
+
+    <div>
+      <label>Or Upload Your Own Image</label>
       <div class="upload-area" onclick="document.getElementById('imgUpload').click()">
-        <div style="font-size:28px">📷</div>
-        <p>Click to upload a different image</p>
-        <p>JPG, PNG, WebP</p>
+        <div style="font-size:24px">📷</div>
+        <p>Click to upload — JPG, PNG, WebP</p>
         <input type="file" id="imgUpload" accept="image/*" onchange="loadImageFile(event)">
       </div>
     </div>
+
     <button class="btn btn-green" onclick="download()">⬇ Download 1080×1350 PNG</button>
+
   </div>
 
   <div class="preview-wrap">
@@ -131,60 +123,140 @@
         <div id="card-content">
           <div id="card-brand">WINSIDE VIEW</div>
           <div id="card-bottom">
-            <div id="card-headline">Kalshi Is Suing America</div>
-            <div id="card-subtitle">One State at a Time. 13 Lawsuits Filed.</div>
+            <div id="card-headline">Your Headline Here</div>
+            <div id="card-subtitle">Your subtitle here</div>
           </div>
         </div>
       </div>
     </div>
     <button class="btn btn-white" style="margin-top:12px;" onclick="download()">⬇ Download 1080×1350 PNG</button>
   </div>
+
 </div>
 
 <script>
-// Read URL parameters — pre-fill from n8n workflow
+// ─── API KEYS — paste yours here ───────────────────────
+const PEXELS_KEY = 're7uYQhezi4lUKkTcFLhOkVFnoLxWOKElB8NDCZGjeF7rmFOeuovQaWX';
+const UNSPLASH_KEY = '0ylZpHut2NvgVLBrUXQnBIUmhae65UWM-NPOBJw0TGA';
+// ────────────────────────────────────────────────────────
+
 function getParam(name) {
-  const url = new URL(window.location.href);
-  return url.searchParams.get(name);
+  return new URL(window.location.href).searchParams.get(name);
 }
 
 window.onload = function() {
   const headline = getParam('headline');
   const subtitle = getParam('subtitle');
-  const brand = getParam('brand');
-  const image = getParam('image');
-  const theme = getParam('theme');
-  const topic = getParam('topic');
+  const brand    = getParam('brand');
+  const image    = getParam('image');
+  const theme    = getParam('theme');
+  const topic    = getParam('topic');
+  const keyword  = getParam('keyword');
 
-  if (headline) {
-    document.getElementById('headline').value = decodeURIComponent(headline);
-  }
-  if (subtitle) {
-    document.getElementById('subtitle').value = decodeURIComponent(subtitle);
-  }
-  if (brand) {
-    document.getElementById('brand').value = decodeURIComponent(brand);
-  }
-  if (theme) {
-    document.getElementById('theme').value = theme;
-    updateTheme();
-  }
-  if (image) {
-    const imgUrl = decodeURIComponent(image);
-    document.getElementById('card-bg').style.backgroundImage = `url(${imgUrl})`;
-    document.getElementById('img-source-label').textContent = '✓ Auto-loaded from workflow';
-  }
-  if (topic) {
-    document.getElementById('auto-label').innerHTML = `<span class="auto-badge">AUTO: ${decodeURIComponent(topic)}</span>`;
+  if (headline) document.getElementById('headline').value = decodeURIComponent(headline);
+  if (subtitle) document.getElementById('subtitle').value = decodeURIComponent(subtitle);
+  if (brand)    document.getElementById('brand').value    = decodeURIComponent(brand);
+  if (theme)    { document.getElementById('theme').value = theme; updateTheme(); }
+  if (topic)    document.getElementById('auto-label').innerHTML = `<span class="auto-badge">AUTO: ${decodeURIComponent(topic)}</span>`;
+
+  if (keyword) {
+    document.getElementById('imgSearch').value = decodeURIComponent(keyword);
+    searchImages();
+  } else if (image) {
+    setImage(decodeURIComponent(image));
   }
 
   update();
 };
 
+async function searchImages() {
+  const query = document.getElementById('imgSearch').value.trim();
+  if (!query) return;
+  document.getElementById('img-status').textContent = 'Searching Pexels + Unsplash...';
+  document.getElementById('img-grid').innerHTML = '';
+
+  const results = [];
+
+  // Pexels
+  try {
+    const res = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=6&orientation=portrait`,
+      { headers: { Authorization: PEXELS_KEY } }
+    );
+    const data = await res.json();
+    if (data.photos) {
+      data.photos.forEach(p => results.push({
+        thumb: p.src.medium,
+        full:  p.src.large2x || p.src.large,
+        credit: 'Pexels',
+        source: 'pexels',
+        name: p.photographer
+      }));
+    }
+  } catch(e) {}
+
+  // Unsplash
+  try {
+    const res = await fetch(
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=6&orientation=portrait&client_id=${UNSPLASH_KEY}`
+    );
+    const data = await res.json();
+    if (data.results) {
+      data.results.forEach(p => results.push({
+        thumb: p.urls.small,
+        full:  p.urls.full,
+        credit: 'Unsplash',
+        source: 'unsplash',
+        name: p.user.name
+      }));
+    }
+  } catch(e) {}
+
+  if (results.length === 0) {
+    document.getElementById('img-status').textContent = 'No results. Add API keys or try different keywords.';
+    return;
+  }
+
+  document.getElementById('img-status').textContent = `${results.length} HD photos found — click to select`;
+  const grid = document.getElementById('img-grid');
+
+  results.forEach(photo => {
+    const wrap = document.createElement('div');
+    wrap.style.position = 'relative';
+
+    const img = document.createElement('img');
+    img.src = photo.thumb;
+    img.className = 'img-thumb';
+    img.title = `${photo.credit} · ${photo.name}`;
+
+    const tag = document.createElement('span');
+    tag.className = `source-tag source-${photo.source}`;
+    tag.textContent = photo.source === 'pexels' ? 'P' : 'U';
+    tag.style.cssText = 'position:absolute;top:4px;left:4px;';
+
+    img.onclick = () => {
+      document.querySelectorAll('.img-thumb').forEach(t => t.classList.remove('selected'));
+      img.classList.add('selected');
+      setImage(photo.full);
+      document.getElementById('img-status').textContent = `✓ ${photo.credit} · ${photo.name}`;
+    };
+
+    wrap.appendChild(img);
+    wrap.appendChild(tag);
+    grid.appendChild(wrap);
+  });
+}
+
+function setImage(url) {
+  document.getElementById('card-bg').style.backgroundImage = `url(${url})`;
+}
+
 function update() {
-  document.getElementById('card-brand').textContent = document.getElementById('brand').value || 'WINSIDE VIEW';
-  document.getElementById('card-headline').textContent = document.getElementById('headline').value || 'Your Headline Here';
-  document.getElementById('card-subtitle').textContent = document.getElementById('subtitle').value || 'Your subtitle here';
+  const headline = document.getElementById('headline').value;
+  const subtitle = document.getElementById('subtitle').value;
+  document.getElementById('card-brand').textContent    = document.getElementById('brand').value || 'WINSIDE VIEW';
+  document.getElementById('card-headline').textContent = headline || 'Your Headline Here';
+  document.getElementById('card-subtitle').textContent = subtitle || 'Your subtitle here';
 }
 
 function updateTheme() {
@@ -195,18 +267,14 @@ function loadImageFile(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = ev => {
-    document.getElementById('card-bg').style.backgroundImage = `url(${ev.target.result})`;
-    document.getElementById('img-source-label').textContent = '✓ Custom image loaded';
-  };
+  reader.onload = ev => setImage(ev.target.result);
   reader.readAsDataURL(file);
 }
 
 function download() {
   const card = document.getElementById('card');
-  const scale = 1080 / 540;
   html2canvas(card, {
-    scale: scale,
+    scale: 1080 / 540,
     useCORS: true,
     allowTaint: true,
     backgroundColor: null,
