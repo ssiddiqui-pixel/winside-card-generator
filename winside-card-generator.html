@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winside View Card Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #111; color: #fff; min-height: 100vh; padding: 20px; }
+  .app { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  h1 { grid-column: 1/-1; font-size: 24px; color: #2D8B55; margin-bottom: 4px; }
+  h1 span { font-size: 13px; color: #666; font-weight: 400; margin-left: 8px; }
+  .controls { background: #1a1a1a; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .controls label { font-size: 13px; color: #aaa; margin-bottom: 4px; display: block; }
+  .controls input[type="text"], .controls textarea, .controls select {
+    width: 100%; padding: 10px 14px; background: #2a2a2a; border: 1px solid #333;
+    border-radius: 8px; color: #fff; font-size: 14px; outline: none;
+  }
+  .controls textarea { resize: vertical; min-height: 60px; }
+  .upload-area {
+    border: 2px dashed #333; border-radius: 8px; padding: 20px;
+    text-align: center; cursor: pointer; transition: border-color 0.2s;
+  }
+  .upload-area:hover { border-color: #2D8B55; }
+  .upload-area input { display: none; }
+  .upload-area p { font-size: 13px; color: #888; margin-top: 6px; }
+  .btn { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; transition: opacity 0.2s; width: 100%; margin-top: 4px; }
+  .btn:hover { opacity: 0.85; }
+  .btn-green { background: #2D8B55; color: #fff; }
+  .btn-white { background: #fff; color: #111; }
+  .preview-wrap { position: sticky; top: 20px; }
+  .preview-label { font-size: 13px; color: #888; margin-bottom: 12px; }
+  .auto-badge { background: #2D8B55; color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+
+  /* CARD */
+  #card {
+    width: 540px;
+    height: 675px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #000;
+    font-family: Arial, sans-serif;
+  }
+  #card-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    background-repeat: no-repeat;
+  }
+  #card-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.15) 0%,
+      rgba(0,0,0,0.1) 35%,
+      rgba(0,0,0,0.5) 55%,
+      rgba(0,0,0,0.92) 75%,
+      rgba(0,0,0,0.98) 100%
+    );
+  }
+  #card-content {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 28px 28px;
+  }
+  #card-brand {
+    font-size: 11px; font-weight: 600; letter-spacing: 4px;
+    text-transform: uppercase; color: rgba(255,255,255,0.75); text-align: center;
+  }
+  #card-bottom { text-align: center; }
+  #card-headline {
+    font-size: 38px; font-weight: 900; color: #fff;
+    line-height: 1.15; margin-bottom: 10px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  #card-subtitle { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.75); line-height: 1.4; }
+
+  .theme-green #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(0,20,10,0.5) 55%, rgba(0,40,20,0.92) 75%, rgba(0,50,25,0.98) 100%); }
+  .theme-gold #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(30,20,0,0.5) 55%, rgba(80,50,0,0.92) 75%, rgba(100,65,0,0.98) 100%); }
+  .theme-red #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(30,0,0,0.5) 55%, rgba(80,0,0,0.92) 75%, rgba(100,0,0,0.98) 100%); }
+  .theme-blue #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(0,10,40,0.5) 55%, rgba(0,20,80,0.92) 75%, rgba(0,25,100,0.98) 100%); }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Winside View — Card Generator <span id="auto-label"></span></h1>
+
+  <div class="controls">
+    <div>
+      <label>Brand Name</label>
+      <input type="text" id="brand" value="WINSIDE VIEW" oninput="update()">
+    </div>
+    <div>
+      <label>Headline</label>
+      <textarea id="headline" oninput="update()">Kalshi Is Suing America</textarea>
+    </div>
+    <div>
+      <label>Subtitle</label>
+      <textarea id="subtitle" oninput="update()">One State at a Time. 13 Lawsuits Filed.</textarea>
+    </div>
+    <div>
+      <label>Gradient Theme</label>
+      <select id="theme" onchange="updateTheme()">
+        <option value="dark">Dark (Black)</option>
+        <option value="green" selected>Green (Betzoo)</option>
+        <option value="gold">Gold (Premium)</option>
+        <option value="red">Red (Breaking)</option>
+        <option value="blue">Blue (Regulatory)</option>
+      </select>
+    </div>
+    <div>
+      <label>Background Image <span id="img-source-label" style="color:#2D8B55;font-size:11px;"></span></label>
+      <div class="upload-area" onclick="document.getElementById('imgUpload').click()">
+        <div style="font-size:28px">📷</div>
+        <p>Click to upload a different image</p>
+        <p>JPG, PNG, WebP</p>
+        <input type="file" id="imgUpload" accept="image/*" onchange="loadImageFile(event)">
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="download()">⬇ Download 1080×1350 PNG</button>
+  </div>
+
+  <div class="preview-wrap">
+    <div class="preview-label">Live Preview</div>
+    <div id="card-wrap" class="theme-green">
+      <div id="card">
+        <div id="card-bg"></div>
+        <div id="card-gradient"></div>
+        <div id="card-content">
+          <div id="card-brand">WINSIDE VIEW</div>
+          <div id="card-bottom">
+            <div id="card-headline">Kalshi Is Suing America</div>
+            <div id="card-subtitle">One State at a Time. 13 Lawsuits Filed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-white" style="margin-top:12px;" onclick="download()">⬇ Download 1080×1350 PNG</button>
+  </div>
+</div>
+
+<script>
+// Read URL parameters — pre-fill from n8n workflow
+function getParam(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
+window.onload = function() {
+  const headline = getParam('headline');
+  const subtitle = getParam('subtitle');
+  const brand = getParam('brand');
+  const image = getParam('image');
+  const theme = getParam('theme');
+  const topic = getParam('topic');
+
+  if (headline) {
+    document.getElementById('headline').value = decodeURIComponent(headline);
+  }
+  if (subtitle) {
+    document.getElementById('subtitle').value = decodeURIComponent(subtitle);
+  }
+  if (brand) {
+    document.getElementById('brand').value = decodeURIComponent(brand);
+  }
+  if (theme) {
+    document.getElementById('theme').value = theme;
+    updateTheme();
+  }
+  if (image) {
+    const imgUrl = decodeURIComponent(image);
+    document.getElementById('card-bg').style.backgroundImage = `url(${imgUrl})`;
+    document.getElementById('img-source-label').textContent = '✓ Auto-loaded from workflow';
+  }
+  if (topic) {
+    document.getElementById('auto-label').innerHTML = `<span class="auto-badge">AUTO: ${decodeURIComponent(topic)}</span>`;
+  }
+
+  update();
+};
+
+function update() {
+  document.getElementById('card-brand').textContent = document.getElementById('brand').value || 'WINSIDE VIEW';
+  document.getElementById('card-headline').textContent = document.getElementById('headline').value || 'Your Headline Here';
+  document.getElementById('card-subtitle').textContent = document.getElementById('subtitle').value || 'Your subtitle here';
+}
+
+function updateTheme() {
+  document.getElementById('card-wrap').className = 'theme-' + document.getElementById('theme').value;
+}
+
+function loadImageFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('card-bg').style.backgroundImage = `url(${ev.target.result})`;
+    document.getElementById('img-source-label').textContent = '✓ Custom image loaded';
+  };
+  reader.readAsDataURL(file);
+}
+
+function download() {
+  const card = document.getElementById('card');
+  const scale = 1080 / 540;
+  html2canvas(card, {
+    scale: scale,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: null,
+    width: 540,
+    height: 675
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'winside-view-card.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+}
+</script>
+</body>
+</html>
