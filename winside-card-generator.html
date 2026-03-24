@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gambling Alerts Card Generator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Anton&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Anton&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', Arial, sans-serif; background: #111; color: #fff; min-height: 100vh; padding: 20px; }
   .app { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
   h1 { grid-column: 1/-1; font-size: 24px; color: #2D8B55; margin-bottom: 4px; }
-  h1 span { font-size: 13px; color: #666; font-weight: 400; margin-left: 8px; }
   .controls { background: #1a1a1a; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
   .controls label { font-size: 13px; color: #aaa; margin-bottom: 4px; display: block; }
+  .hint { font-size: 11px; color: #555; margin-top: 4px; }
   .controls input[type="text"], .controls textarea, .controls select {
     width: 100%; padding: 10px 14px; background: #2a2a2a; border: 1px solid #333;
     border-radius: 8px; color: #fff; font-size: 14px; outline: none; font-family: 'Inter', Arial, sans-serif;
@@ -21,7 +21,7 @@
   .controls textarea { resize: vertical; min-height: 60px; }
   .search-row { display: flex; gap: 8px; }
   .search-row input { flex: 1; }
-  .btn-search { padding: 10px 16px; background: #2D8B55; border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: 'Inter', Arial, sans-serif; }
+  .btn-search { padding: 10px 16px; background: #2D8B55; border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
   .btn-search:hover { background: #249148; }
   .img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
   .img-thumb { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
@@ -40,50 +40,103 @@
   .source-tag { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-right: 4px; font-weight: 600; }
   .source-pexels { background: #05a081; color: #fff; }
   .source-unsplash { background: #111; color: #fff; border: 1px solid #444; }
-  .hint { font-size: 11px; color: #555; margin-top: 4px; }
 
   /* CARD */
-  #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; font-family: 'Anton', sans-serif; }
+  #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; }
   #card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
-  #card-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.1) 35%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.85) 100%); }
-  #card-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 28px 52px; }
-  #card-brand { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.8); text-align: center; }
-  #card-bottom { text-align: center; }
+  #card-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 58%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.95) 100%); }
+
+  /* category pill — top left */
+  #card-category {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: #FFD700;
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: none;
+  }
+  #card-category.visible { display: inline-block; }
+
+  /* bottom content */
+  #card-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 22px 22px;
+    text-align: center;
+  }
   #card-headline {
     font-family: 'Anton', sans-serif;
     font-size: 46px;
     font-weight: 400;
     color: #fff;
     line-height: 1.05;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    -webkit-text-stroke: 1px rgba(0,0,0,0.3);
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.6);
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.9), 0 4px 20px rgba(0,0,0,0.7);
   }
-  #card-subtitle { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.85); line-height: 1.4; }
+  #card-headline .highlight { color: #FFD700; }
+  #card-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
   #card-subtitle.hidden { display: none; }
+
+  /* brand tag bottom */
+  #card-brand {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
 </style>
 </head>
 <body>
 <div class="app">
-  <h1>Gambling Alerts — Card Generator <span id="auto-label"></span></h1>
+  <h1>Gambling Alerts — Card Generator</h1>
 
   <div class="controls">
+
     <div>
       <label>Brand Name</label>
-      <input type="text" id="brand" value="GAMBLING ALERTS" oninput="update()">
+      <input type="text" id="brand" value="OGC" oninput="update()">
+    </div>
+
+    <div>
+      <label>Category Pill <span style="color:#555;font-size:11px;">(leave blank to hide)</span></label>
+      <input type="text" id="category" placeholder="e.g. SCIENCE, BREAKING, HEALTH" oninput="update()">
     </div>
 
     <div>
       <label>Headline</label>
       <textarea id="headline" placeholder="Your headline here..." oninput="update()"></textarea>
-      <p class="hint">All caps automatically applied.</p>
+      <p class="hint">Automatically uppercase.</p>
+    </div>
+
+    <div>
+      <label>Highlight Words <span style="color:#555;font-size:11px;">(comma separated — turns gold)</span></label>
+      <input type="text" id="highlights" placeholder="e.g. $643K, WINS, CASINO" oninput="update()">
+      <p class="hint">These words will appear in yellow in the headline.</p>
     </div>
 
     <div>
       <label>Subtitle <span style="color:#555;font-size:11px;">(leave blank to hide)</span></label>
-      <textarea id="subtitle" placeholder="Your subtitle here..." oninput="update()"></textarea>
+      <textarea id="subtitle" placeholder="Optional subtitle..." oninput="update()"></textarea>
     </div>
 
     <div>
@@ -114,12 +167,11 @@
       <div id="card">
         <div id="card-bg"></div>
         <div id="card-gradient"></div>
-        <div id="card-content">
-          <div id="card-brand">GAMBLING ALERTS</div>
-          <div id="card-bottom">
-            <div id="card-headline">Your Headline Here</div>
-            <div id="card-subtitle" class="hidden"></div>
-          </div>
+        <div id="card-category"></div>
+        <div id="card-bottom">
+          <div id="card-headline">YOUR HEADLINE HERE</div>
+          <div id="card-subtitle" class="hidden"></div>
+          <div id="card-brand">OGC</div>
         </div>
       </div>
     </div>
@@ -128,35 +180,78 @@
 </div>
 
 <script>
-const PEXELS_KEY = 're7uYQhezi4lUKkTcFLhOkVFnoLxWOKElB8NDCZGjeF7rmFOeuovQaWX';
+const PEXELS_KEY   = 're7uYQhezi4lUKkTcFLhOkVFnoLxWOKElB8NDCZGjeF7rmFOeuovQaWX';
 const UNSPLASH_KEY = '0ylZpHut2NvgVLBrUXQnBIUmhae65UWM-NPOBJw0TGA';
 
-function getParam(name) {
-  return new URL(window.location.href).searchParams.get(name);
-}
+function getParam(n) { return new URL(window.location.href).searchParams.get(n); }
 
 window.onload = function() {
-  const headline = getParam('headline');
-  const subtitle = getParam('subtitle');
-  const brand    = getParam('brand');
-  const image    = getParam('image');
-  const topic    = getParam('topic');
-  const keyword  = getParam('keyword');
+  const headline   = getParam('headline');
+  const subtitle   = getParam('subtitle');
+  const brand      = getParam('brand');
+  const image      = getParam('image');
+  const keyword    = getParam('keyword');
+  const highlights = getParam('highlights');
+  const category   = getParam('category');
 
-  if (headline) document.getElementById('headline').value = decodeURIComponent(headline);
-  if (subtitle) document.getElementById('subtitle').value = decodeURIComponent(subtitle);
-  if (brand)    document.getElementById('brand').value    = decodeURIComponent(brand);
-  if (topic)    document.getElementById('auto-label').innerHTML = `<span style="background:#2D8B55;color:#fff;font-size:11px;padding:3px 8px;border-radius:4px;margin-left:8px;">AUTO: ${decodeURIComponent(topic)}</span>`;
+  if (headline)   document.getElementById('headline').value   = decodeURIComponent(headline);
+  if (subtitle)   document.getElementById('subtitle').value   = decodeURIComponent(subtitle);
+  if (brand)      document.getElementById('brand').value      = decodeURIComponent(brand);
+  if (highlights) document.getElementById('highlights').value = decodeURIComponent(highlights);
+  if (category)   document.getElementById('category').value   = decodeURIComponent(category);
 
-  if (keyword) {
-    document.getElementById('imgSearch').value = decodeURIComponent(keyword);
-    searchImages();
-  } else if (image) {
-    setImage(decodeURIComponent(image));
-  }
+  if (keyword) { document.getElementById('imgSearch').value = decodeURIComponent(keyword); searchImages(); }
+  else if (image) { setImage(decodeURIComponent(image)); }
 
   update();
 };
+
+function applyHighlights(text, words) {
+  if (!words.length) return document.createTextNode(text);
+  const frag = document.createDocumentFragment();
+  // build regex from all highlight words
+  const escaped = words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
+  const parts = text.split(regex);
+  parts.forEach(part => {
+    if (words.some(w => w.toLowerCase() === part.toLowerCase())) {
+      const span = document.createElement('span');
+      span.className = 'highlight';
+      span.textContent = part;
+      frag.appendChild(span);
+    } else {
+      frag.appendChild(document.createTextNode(part));
+    }
+  });
+  return frag;
+}
+
+function update() {
+  const headlineRaw = (document.getElementById('headline').value || 'YOUR HEADLINE HERE').toUpperCase();
+  const subtitle    = document.getElementById('subtitle').value.trim();
+  const brand       = document.getElementById('brand').value.trim() || 'OGC';
+  const categoryVal = document.getElementById('category').value.trim().toUpperCase();
+  const hlRaw       = document.getElementById('highlights').value;
+  const hlWords     = hlRaw.split(',').map(w => w.trim().toUpperCase()).filter(Boolean);
+
+  // headline with highlights
+  const headlineEl = document.getElementById('card-headline');
+  headlineEl.innerHTML = '';
+  headlineEl.appendChild(applyHighlights(headlineRaw, hlWords));
+
+  // subtitle
+  const subtitleEl = document.getElementById('card-subtitle');
+  if (subtitle) { subtitleEl.textContent = subtitle; subtitleEl.classList.remove('hidden'); }
+  else { subtitleEl.textContent = ''; subtitleEl.classList.add('hidden'); }
+
+  // brand
+  document.getElementById('card-brand').textContent = brand;
+
+  // category pill
+  const catEl = document.getElementById('card-category');
+  if (categoryVal) { catEl.textContent = categoryVal; catEl.classList.add('visible'); }
+  else { catEl.textContent = ''; catEl.classList.remove('visible'); }
+}
 
 async function searchImages() {
   const query = document.getElementById('imgSearch').value.trim();
@@ -166,39 +261,26 @@ async function searchImages() {
   const results = [];
 
   try {
-    const res = await fetch(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=6&orientation=portrait`,
-      { headers: { Authorization: PEXELS_KEY } }
-    );
-    const data = await res.json();
-    if (data.photos) data.photos.forEach(p => results.push({
-      thumb: p.src.medium, full: p.src.large2x || p.src.large,
-      credit: 'Pexels', source: 'pexels', name: p.photographer
-    }));
+    const r = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=6&orientation=portrait`, { headers: { Authorization: PEXELS_KEY } });
+    const d = await r.json();
+    if (d.photos) d.photos.forEach(p => results.push({ thumb: p.src.medium, full: p.src.large2x || p.src.large, credit: 'Pexels', source: 'pexels', name: p.photographer }));
   } catch(e) {}
 
   try {
-    const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=6&orientation=portrait&client_id=${UNSPLASH_KEY}`
-    );
-    const data = await res.json();
-    if (data.results) data.results.forEach(p => results.push({
-      thumb: p.urls.small, full: p.urls.full,
-      credit: 'Unsplash', source: 'unsplash', name: p.user.name
-    }));
+    const r = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=6&orientation=portrait&client_id=${UNSPLASH_KEY}`);
+    const d = await r.json();
+    if (d.results) d.results.forEach(p => results.push({ thumb: p.urls.small, full: p.urls.full, credit: 'Unsplash', source: 'unsplash', name: p.user.name }));
   } catch(e) {}
 
   if (!results.length) { document.getElementById('img-status').textContent = 'No results. Try different keywords.'; return; }
-  document.getElementById('img-status').textContent = `${results.length} photos found — click to select`;
+  document.getElementById('img-status').textContent = `${results.length} photos — click to select`;
   const grid = document.getElementById('img-grid');
 
   results.forEach(photo => {
     const wrap = document.createElement('div');
     wrap.style.position = 'relative';
     const img = document.createElement('img');
-    img.src = photo.thumb;
-    img.className = 'img-thumb';
-    img.title = `${photo.credit} · ${photo.name}`;
+    img.src = photo.thumb; img.className = 'img-thumb'; img.title = `${photo.credit} · ${photo.name}`;
     const tag = document.createElement('span');
     tag.className = `source-tag source-${photo.source}`;
     tag.textContent = photo.source === 'pexels' ? 'P' : 'U';
@@ -209,53 +291,27 @@ async function searchImages() {
       setImage(photo.full);
       document.getElementById('img-status').textContent = `✓ ${photo.credit} · ${photo.name}`;
     };
-    wrap.appendChild(img);
-    wrap.appendChild(tag);
-    grid.appendChild(wrap);
+    wrap.appendChild(img); wrap.appendChild(tag); grid.appendChild(wrap);
   });
 }
 
-function setImage(url) {
-  document.getElementById('card-bg').style.backgroundImage = `url(${url})`;
-}
-
-function update() {
-  const headline = document.getElementById('headline').value.trim();
-  const subtitle = document.getElementById('subtitle').value.trim();
-  document.getElementById('card-brand').textContent    = document.getElementById('brand').value || 'GAMBLING ALERTS';
-  document.getElementById('card-headline').textContent = headline || 'Your Headline Here';
-  const subtitleEl = document.getElementById('card-subtitle');
-  if (subtitle) {
-    subtitleEl.textContent = subtitle;
-    subtitleEl.classList.remove('hidden');
-  } else {
-    subtitleEl.textContent = '';
-    subtitleEl.classList.add('hidden');
-  }
-}
+function setImage(url) { document.getElementById('card-bg').style.backgroundImage = `url(${url})`; }
 
 function loadImageFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => setImage(ev.target.result);
   reader.readAsDataURL(file);
 }
 
 function download() {
-  const card = document.getElementById('card');
-  html2canvas(card, {
-    scale: 1080 / 540,
-    useCORS: true,
-    allowTaint: true,
-    backgroundColor: null,
-    width: 540,
-    height: 675
+  html2canvas(document.getElementById('card'), {
+    scale: 1080/540, useCORS: true, allowTaint: true, backgroundColor: null, width: 540, height: 675
   }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = 'gambling-alerts-card.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    const a = document.createElement('a');
+    a.download = 'gambling-alerts-card.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
   });
 }
 </script>
