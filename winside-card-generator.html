@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winside View Card Generator</title>
+<title>Gambling Alerts Card Generator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Anton&display=swap" rel="stylesheet">
 <style>
@@ -37,29 +37,32 @@
   .btn-white { background: #fff; color: #111; }
   .preview-wrap { position: sticky; top: 20px; }
   .preview-label { font-size: 13px; color: #888; margin-bottom: 12px; }
-  .auto-badge { background: #2D8B55; color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
   .source-tag { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-right: 4px; font-weight: 600; }
   .source-pexels { background: #05a081; color: #fff; }
   .source-unsplash { background: #111; color: #fff; border: 1px solid #444; }
+  .hint { font-size: 11px; color: #555; margin-top: 4px; }
 
   /* CARD */
-  #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; font-family: 'Inter', Arial, sans-serif; }
+  #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; font-family: 'Anton', sans-serif; }
   #card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
-  #card-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.55) 65%, rgba(0,0,0,0.75) 100%); }
-  #card-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 28px 28px; }
-  #card-brand { font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.75); text-align: center; }
-  #card-bottom { text-align: center; }
-  #card-headline { font-family: 'Anton', sans-serif; font-size: 42px; font-weight: 400; color: #fff; line-height: 1.1; margin-bottom: 10px; text-shadow: 0 2px 12px rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
-  #card-subtitle { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.75); line-height: 1.4; }
+  #card-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.1) 35%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.85) 100%); }
+  #card-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 28px 52px; }
+  #card-brand { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.8); text-align: center; }
+  #card-bottom { text-align: left; }
+  #card-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: 56px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.05;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    -webkit-text-stroke: 1px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.6);
+  }
+  #card-subtitle { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.85); line-height: 1.4; }
   #card-subtitle.hidden { display: none; }
-
-  /* Themes */
-  .theme-none    #card-gradient { background: none; }
-  .theme-dark    #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.92) 75%, rgba(0,0,0,0.98) 100%); }
-  .theme-green   #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(0,20,10,0.5) 55%, rgba(0,40,20,0.92) 75%, rgba(0,50,25,0.98) 100%); }
-  .theme-gold    #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(30,20,0,0.5) 55%, rgba(80,50,0,0.92) 75%, rgba(100,65,0,0.98) 100%); }
-  .theme-red     #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(30,0,0,0.5) 55%, rgba(80,0,0,0.92) 75%, rgba(100,0,0,0.98) 100%); }
-  .theme-blue    #card-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 35%, rgba(0,10,40,0.5) 55%, rgba(0,20,80,0.92) 75%, rgba(0,25,100,0.98) 100%); }
 </style>
 </head>
 <body>
@@ -67,7 +70,6 @@
   <h1>Gambling Alerts — Card Generator <span id="auto-label"></span></h1>
 
   <div class="controls">
-
     <div>
       <label>Brand Name</label>
       <input type="text" id="brand" value="GAMBLING ALERTS" oninput="update()">
@@ -76,6 +78,7 @@
     <div>
       <label>Headline</label>
       <textarea id="headline" placeholder="Your headline here..." oninput="update()"></textarea>
+      <p class="hint">All caps automatically applied.</p>
     </div>
 
     <div>
@@ -86,7 +89,7 @@
     <div>
       <label>Search HD Images (Pexels + Unsplash)</label>
       <div class="search-row">
-        <input type="text" id="imgSearch" placeholder="e.g. courthouse, trading floor, basketball" onkeydown="if(event.key==='Enter')searchImages()">
+        <input type="text" id="imgSearch" placeholder="e.g. casino, roulette, poker" onkeydown="if(event.key==='Enter')searchImages()">
         <button class="btn-search" onclick="searchImages()">Search</button>
       </div>
       <div id="img-status" class="img-status"></div>
@@ -103,7 +106,6 @@
     </div>
 
     <button class="btn btn-green" onclick="download()">⬇ Download 1080×1350 PNG</button>
-
   </div>
 
   <div class="preview-wrap">
@@ -113,7 +115,7 @@
         <div id="card-bg"></div>
         <div id="card-gradient"></div>
         <div id="card-content">
-          <div id="card-brand">WINSIDE VIEW</div>
+          <div id="card-brand">GAMBLING ALERTS</div>
           <div id="card-bottom">
             <div id="card-headline">Your Headline Here</div>
             <div id="card-subtitle" class="hidden"></div>
@@ -123,7 +125,6 @@
     </div>
     <button class="btn btn-white" style="margin-top:12px;" onclick="download()">⬇ Download 1080×1350 PNG</button>
   </div>
-
 </div>
 
 <script>
@@ -139,15 +140,13 @@ window.onload = function() {
   const subtitle = getParam('subtitle');
   const brand    = getParam('brand');
   const image    = getParam('image');
-  const theme    = getParam('theme');
   const topic    = getParam('topic');
   const keyword  = getParam('keyword');
 
   if (headline) document.getElementById('headline').value = decodeURIComponent(headline);
   if (subtitle) document.getElementById('subtitle').value = decodeURIComponent(subtitle);
   if (brand)    document.getElementById('brand').value    = decodeURIComponent(brand);
-  if (theme)    { document.getElementById('theme').value = theme; updateTheme(); }
-  if (topic)    document.getElementById('auto-label').innerHTML = `<span class="auto-badge">AUTO: ${decodeURIComponent(topic)}</span>`;
+  if (topic)    document.getElementById('auto-label').innerHTML = `<span style="background:#2D8B55;color:#fff;font-size:11px;padding:3px 8px;border-radius:4px;margin-left:8px;">AUTO: ${decodeURIComponent(topic)}</span>`;
 
   if (keyword) {
     document.getElementById('imgSearch').value = decodeURIComponent(keyword);
@@ -162,9 +161,8 @@ window.onload = function() {
 async function searchImages() {
   const query = document.getElementById('imgSearch').value.trim();
   if (!query) return;
-  document.getElementById('img-status').textContent = 'Searching Pexels + Unsplash...';
+  document.getElementById('img-status').textContent = 'Searching...';
   document.getElementById('img-grid').innerHTML = '';
-
   const results = [];
 
   try {
@@ -173,12 +171,10 @@ async function searchImages() {
       { headers: { Authorization: PEXELS_KEY } }
     );
     const data = await res.json();
-    if (data.photos) {
-      data.photos.forEach(p => results.push({
-        thumb: p.src.medium, full: p.src.large2x || p.src.large,
-        credit: 'Pexels', source: 'pexels', name: p.photographer
-      }));
-    }
+    if (data.photos) data.photos.forEach(p => results.push({
+      thumb: p.src.medium, full: p.src.large2x || p.src.large,
+      credit: 'Pexels', source: 'pexels', name: p.photographer
+    }));
   } catch(e) {}
 
   try {
@@ -186,20 +182,14 @@ async function searchImages() {
       `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=6&orientation=portrait&client_id=${UNSPLASH_KEY}`
     );
     const data = await res.json();
-    if (data.results) {
-      data.results.forEach(p => results.push({
-        thumb: p.urls.small, full: p.urls.full,
-        credit: 'Unsplash', source: 'unsplash', name: p.user.name
-      }));
-    }
+    if (data.results) data.results.forEach(p => results.push({
+      thumb: p.urls.small, full: p.urls.full,
+      credit: 'Unsplash', source: 'unsplash', name: p.user.name
+    }));
   } catch(e) {}
 
-  if (results.length === 0) {
-    document.getElementById('img-status').textContent = 'No results. Try different keywords.';
-    return;
-  }
-
-  document.getElementById('img-status').textContent = `${results.length} HD photos found — click to select`;
+  if (!results.length) { document.getElementById('img-status').textContent = 'No results. Try different keywords.'; return; }
+  document.getElementById('img-status').textContent = `${results.length} photos found — click to select`;
   const grid = document.getElementById('img-grid');
 
   results.forEach(photo => {
@@ -232,10 +222,8 @@ function setImage(url) {
 function update() {
   const headline = document.getElementById('headline').value.trim();
   const subtitle = document.getElementById('subtitle').value.trim();
-
-  document.getElementById('card-brand').textContent    = document.getElementById('brand').value || 'WINSIDE VIEW';
+  document.getElementById('card-brand').textContent    = document.getElementById('brand').value || 'GAMBLING ALERTS';
   document.getElementById('card-headline').textContent = headline || 'Your Headline Here';
-
   const subtitleEl = document.getElementById('card-subtitle');
   if (subtitle) {
     subtitleEl.textContent = subtitle;
@@ -244,10 +232,6 @@ function update() {
     subtitleEl.textContent = '';
     subtitleEl.classList.add('hidden');
   }
-}
-
-function updateTheme() {
-  document.getElementById('card-wrap').className = 'theme-' + document.getElementById('theme').value;
 }
 
 function loadImageFile(e) {
@@ -269,7 +253,7 @@ function download() {
     height: 675
   }).then(canvas => {
     const link = document.createElement('a');
-    link.download = 'winside-view-card.png';
+    link.download = 'gambling-alerts-card.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
   });
