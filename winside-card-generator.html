@@ -45,7 +45,7 @@
   /* CARD */
   #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; font-family: 'Inter', Arial, sans-serif; }
   #card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
-  #card-gradient { position: absolute; inset: 0; }
+  #card-gradient { position: absolute; inset: 0; background: none; }
   #card-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 28px 28px; }
   #card-brand { font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.75); text-align: center; }
   #card-bottom { text-align: center; }
@@ -108,7 +108,7 @@
 
   <div class="preview-wrap">
     <div class="preview-label">Live Preview</div>
-    <div id="card-wrap" class="theme-green">
+    <div id="card-wrap">
       <div id="card">
         <div id="card-bg"></div>
         <div id="card-gradient"></div>
