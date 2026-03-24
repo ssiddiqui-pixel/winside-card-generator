@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gambling Alerts Card Generator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Anton&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Anton&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', Arial, sans-serif; background: #111; color: #fff; min-height: 100vh; padding: 20px; }
@@ -14,7 +14,7 @@
   .controls { background: #1a1a1a; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
   .controls label { font-size: 13px; color: #aaa; margin-bottom: 4px; display: block; }
   .hint { font-size: 11px; color: #555; margin-top: 4px; }
-  .controls input[type="text"], .controls textarea, .controls select {
+  .controls input[type="text"], .controls textarea {
     width: 100%; padding: 10px 14px; background: #2a2a2a; border: 1px solid #333;
     border-radius: 8px; color: #fff; font-size: 14px; outline: none; font-family: 'Inter', Arial, sans-serif;
   }
@@ -42,68 +42,26 @@
   .source-unsplash { background: #111; color: #fff; border: 1px solid #444; }
 
   /* CARD */
-  #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; }
+  #card { width: 540px; height: 675px; position: relative; overflow: hidden; border-radius: 4px; background: #000; font-family: 'Inter', Arial, sans-serif; }
   #card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
-  #card-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 58%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.95) 100%); }
-
-  /* category pill — top left */
-  #card-category {
-    position: absolute;
-    top: 18px;
-    left: 20px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    background: #FFD700;
-    color: #000;
-    padding: 4px 10px;
-    border-radius: 4px;
-    display: none;
-  }
-  #card-category.visible { display: inline-block; }
-
-  /* bottom content */
-  #card-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0 22px 22px;
-    text-align: center;
-  }
+  #card-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.55) 65%, rgba(0,0,0,0.75) 100%); }
+  #card-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 28px 52px; }
+  #card-brand { font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.75); text-align: center; }
+  #card-bottom { text-align: center; }
   #card-headline {
     font-family: 'Anton', sans-serif;
     font-size: 46px;
     font-weight: 400;
     color: #fff;
     line-height: 1.05;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.9), 0 4px 20px rgba(0,0,0,0.7);
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.6);
   }
-  #card-headline .highlight { color: #FFD700; }
-  #card-subtitle {
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.4;
-    margin-bottom: 10px;
-  }
+  #card-headline .highlight { color: #FFFF00; }
+  #card-subtitle { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.75); line-height: 1.4; }
   #card-subtitle.hidden { display: none; }
-
-  /* brand tag bottom */
-  #card-brand {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-  }
 </style>
 </head>
 <body>
@@ -111,32 +69,19 @@
   <h1>Gambling Alerts — Card Generator</h1>
 
   <div class="controls">
-
     <div>
       <label>Brand Name</label>
-      <input type="text" id="brand" value="OGC" oninput="update()">
-    </div>
-
-    <div>
-      <label>Category Pill <span style="color:#555;font-size:11px;">(leave blank to hide)</span></label>
-      <input type="text" id="category" placeholder="e.g. SCIENCE, BREAKING, HEALTH" oninput="update()">
+      <input type="text" id="brand" value="GAMBLING ALERTS" oninput="update()">
     </div>
 
     <div>
       <label>Headline</label>
       <textarea id="headline" placeholder="Your headline here..." oninput="update()"></textarea>
-      <p class="hint">Automatically uppercase.</p>
-    </div>
-
-    <div>
-      <label>Highlight Words <span style="color:#555;font-size:11px;">(comma separated — turns gold)</span></label>
-      <input type="text" id="highlights" placeholder="e.g. $643K, WINS, CASINO" oninput="update()">
-      <p class="hint">These words will appear in yellow in the headline.</p>
     </div>
 
     <div>
       <label>Subtitle <span style="color:#555;font-size:11px;">(leave blank to hide)</span></label>
-      <textarea id="subtitle" placeholder="Optional subtitle..." oninput="update()"></textarea>
+      <textarea id="subtitle" placeholder="Your subtitle here..." oninput="update()"></textarea>
     </div>
 
     <div>
@@ -167,11 +112,12 @@
       <div id="card">
         <div id="card-bg"></div>
         <div id="card-gradient"></div>
-        <div id="card-category"></div>
-        <div id="card-bottom">
-          <div id="card-headline">YOUR HEADLINE HERE</div>
-          <div id="card-subtitle" class="hidden"></div>
-          <div id="card-brand">OGC</div>
+        <div id="card-content">
+          <div id="card-brand">GAMBLING ALERTS</div>
+          <div id="card-bottom">
+            <div id="card-headline">Your Headline Here</div>
+            <div id="card-subtitle" class="hidden"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -192,13 +138,11 @@ window.onload = function() {
   const image      = getParam('image');
   const keyword    = getParam('keyword');
   const highlights = getParam('highlights');
-  const category   = getParam('category');
 
   if (headline)   document.getElementById('headline').value   = decodeURIComponent(headline);
   if (subtitle)   document.getElementById('subtitle').value   = decodeURIComponent(subtitle);
   if (brand)      document.getElementById('brand').value      = decodeURIComponent(brand);
   if (highlights) document.getElementById('highlights').value = decodeURIComponent(highlights);
-  if (category)   document.getElementById('category').value   = decodeURIComponent(category);
 
   if (keyword) { document.getElementById('imgSearch').value = decodeURIComponent(keyword); searchImages(); }
   else if (image) { setImage(decodeURIComponent(image)); }
@@ -206,19 +150,18 @@ window.onload = function() {
   update();
 };
 
-function applyHighlights(text, words) {
-  if (!words.length) return document.createTextNode(text);
+function autoHighlight(text) {
+  const words = text.split(/(\s+)/);
+  const longest = words.reduce((a, b) => b.trim().length > a.trim().length ? b : a, '').trim();
   const frag = document.createDocumentFragment();
-  // build regex from all highlight words
-  const escaped = words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-  const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
-  const parts = text.split(regex);
-  parts.forEach(part => {
-    if (words.some(w => w.toLowerCase() === part.toLowerCase())) {
+  let highlighted = false;
+  words.forEach(part => {
+    if (!highlighted && part.trim() === longest) {
       const span = document.createElement('span');
       span.className = 'highlight';
       span.textContent = part;
       frag.appendChild(span);
+      highlighted = true;
     } else {
       frag.appendChild(document.createTextNode(part));
     }
@@ -227,30 +170,19 @@ function applyHighlights(text, words) {
 }
 
 function update() {
-  const headlineRaw = (document.getElementById('headline').value || 'YOUR HEADLINE HERE').toUpperCase();
+  const headlineRaw = document.getElementById('headline').value || 'Your Headline Here';
   const subtitle    = document.getElementById('subtitle').value.trim();
-  const brand       = document.getElementById('brand').value.trim() || 'OGC';
-  const categoryVal = document.getElementById('category').value.trim().toUpperCase();
-  const hlRaw       = document.getElementById('highlights').value;
-  const hlWords     = hlRaw.split(',').map(w => w.trim().toUpperCase()).filter(Boolean);
+  const hlWords = document.getElementById('highlights') ? document.getElementById('highlights').value.split(',').map(w => w.trim()).filter(Boolean) : [];
 
-  // headline with highlights
+  document.getElementById('card-brand').textContent = document.getElementById('brand').value || 'GAMBLING ALERTS';
+
   const headlineEl = document.getElementById('card-headline');
   headlineEl.innerHTML = '';
-  headlineEl.appendChild(applyHighlights(headlineRaw, hlWords));
+  headlineEl.appendChild(autoHighlight(headlineRaw.toUpperCase()));
 
-  // subtitle
   const subtitleEl = document.getElementById('card-subtitle');
   if (subtitle) { subtitleEl.textContent = subtitle; subtitleEl.classList.remove('hidden'); }
   else { subtitleEl.textContent = ''; subtitleEl.classList.add('hidden'); }
-
-  // brand
-  document.getElementById('card-brand').textContent = brand;
-
-  // category pill
-  const catEl = document.getElementById('card-category');
-  if (categoryVal) { catEl.textContent = categoryVal; catEl.classList.add('visible'); }
-  else { catEl.textContent = ''; catEl.classList.remove('visible'); }
 }
 
 async function searchImages() {
