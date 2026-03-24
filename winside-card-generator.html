@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Winside View Card Generator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Anton&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', Arial, sans-serif; background: #111; color: #fff; min-height: 100vh; padding: 20px; }
@@ -49,7 +49,7 @@
   #card-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 28px 28px; }
   #card-brand { font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.75); text-align: center; }
   #card-bottom { text-align: center; }
-  #card-headline { font-size: 38px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 10px; text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+  #card-headline { font-family: 'Anton', sans-serif; font-size: 42px; font-weight: 400; color: #fff; line-height: 1.1; margin-bottom: 10px; text-shadow: 0 2px 12px rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
   #card-subtitle { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.75); line-height: 1.4; }
   #card-subtitle.hidden { display: none; }
 
@@ -64,13 +64,13 @@
 </head>
 <body>
 <div class="app">
-  <h1>Winside View — Card Generator <span id="auto-label"></span></h1>
+  <h1>Gambling Alert — Card Generator <span id="auto-label"></span></h1>
 
   <div class="controls">
 
     <div>
       <label>Brand Name</label>
-      <input type="text" id="brand" value="WINSIDE VIEW" oninput="update()">
+      <input type="text" id="brand" value="GAMBLING ALERT" oninput="update()">
     </div>
 
     <div>
@@ -81,18 +81,6 @@
     <div>
       <label>Subtitle <span style="color:#555;font-size:11px;">(leave blank to hide)</span></label>
       <textarea id="subtitle" placeholder="Your subtitle here..." oninput="update()"></textarea>
-    </div>
-
-    <div>
-      <label>Overlay Theme</label>
-      <select id="theme" onchange="updateTheme()">
-        <option value="none">None (No Overlay)</option>
-        <option value="dark">Dark (Black)</option>
-        <option value="green" selected>Green (Betzoo)</option>
-        <option value="gold">Gold (Premium)</option>
-        <option value="red">Red (Breaking)</option>
-        <option value="blue">Blue (Regulatory)</option>
-      </select>
     </div>
 
     <div>
